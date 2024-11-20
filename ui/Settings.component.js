@@ -1,4 +1,6 @@
-export const settings = () => {
+import { gameStart } from "../state/data.js"
+
+export const settingsMode = () => {
     const element = document.createElement('div')
 
     const gridSizeSelectElement = document.createElement("select")
@@ -10,6 +12,9 @@ export const settings = () => {
 
     const startButtonElement = document.createElement('button')
     startButtonElement.append('START')
+    startButtonElement.addEventListener('click', () => {
+        gameStart()
+    });
 
     element.append(startButtonElement)
 

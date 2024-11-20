@@ -1,19 +1,23 @@
-import { settings } from "./Settings.component.js";
-import { getStatus } from "../state/data.js"
+import { settingsMode } from "./Settings.component.js";
+import { getStatus, subsriber } from "../state/data.js"
 import { GAME_STATUSES } from "../state/GAME_STATUSES.js";
-
-const status = getStatus()
+import { gameMode } from "./Game.component.js";
+import { loseMode } from "./Lose.component.js";
+import { Game } from "./gameSettings.component.js";
 
 const rootElement = document.getElementById('root')
 
-switch (status) {
-    case GAME_STATUSES.SETTINGS:
-        const settingsMode = settings()
-        rootElement.append(settingsMode)
-        break;
+const render = () => {
+    rootElement.innerHTML = "";
+    
+    const status = getStatus()
 
-    default:
-        rootElement.append(status)
-        break;
+    const gameElement = Game(status)
+
+    rootElement.append(gameElement)
+
 }
 
+render()
+
+subsriber(render)
