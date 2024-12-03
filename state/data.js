@@ -34,17 +34,32 @@ export const getMousePosition = () => {
     return _state.positions.mouse
 }
 
+export const getCat1Position = () => {
+    return _state.positions.cat1
+}
+
 export const gameStart = () => {
     _state.status = GAME_STATUSES.PROGRESS
-    setInterval(_teleportMouse, 1000)
+    _teleportMouse()
+    setInterval(_mouseEscape, 1000)
     _observer()
+}
+
+
+export let catsMove = (playerNumber, playerDirection) => {
+    const newCoords = {..._state.positions["cat" + playerNumber]}
+}
+
+let _mouseEscape = () => {
+    _teleportMouse()
 }
 
 let _teleportMouse = () => {
     const newXPosition =  _getRandomInt(getGridSize().columnCount)
     const newYPosition = _getRandomInt(getGridSize().rowCount)
 
-    if (newXPosition === getMousePosition.x && newYPosition === getMousePosition.y){
+    if ((newXPosition === getMousePosition.x && newYPosition === getMousePosition.y)
+        || (newXPosition === getCat1Position.x && newYPosition === getCat1Position.y)){
         _teleportMouse();
         return;
     }
