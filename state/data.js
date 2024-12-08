@@ -1,3 +1,4 @@
+import { CATS_DIRECTIONS } from "./CATS_DIRECTIONS.js"
 import { GAME_STATUSES } from "./GAME_STATUSES.js"
 
 const _state = {
@@ -6,13 +7,20 @@ const _state = {
         gridSize: {
             rowCount: 4,
             columnCount: 4,
-        }
+        },
+        pointsToWin: 30,
+        pointsToLose: 3,
     },
     positions: {
         mouse: {x: 0, y: 0},
         cat1: {x: 2, y:2 },
         cat2: {x: 3, y:3 }
-    }
+    },
+    points: {
+        mouse: 0,
+        cat1: 0,
+        cat2: 0
+    },
 }
 
 
@@ -41,13 +49,81 @@ export const getCat1Position = () => {
 export const gameStart = () => {
     _state.status = GAME_STATUSES.PROGRESS
     _teleportMouse()
-    setInterval(_mouseEscape, 1000)
+    jumpInterval = setInterval(_mouseEscape, 4000)
     _observer()
 }
 
+let jumpInterval
+
 
 export let catsMove = (playerNumber, playerDirection) => {
-    const newCoords = {..._state.positions["cat" + playerNumber]}
+
+    const catsPositionRedusers = {
+        [CATS_DIRECTIONS.UP]: (coords) => {
+            return {
+                x: coords.x,
+                y: coords.y - 1,
+            }
+        },
+        [CATS_DIRECTIONS.DOWN]: (coords) => {
+            return {
+                x: coords.x,
+                y: coords.y + 1,
+            }
+        },
+        [CATS_DIRECTIONS.LEFT]: (coords) => {
+            return {
+                x: coords.x - 1,
+                y: coords.y,
+            }
+        },
+        [CATS_DIRECTIONS.RIGHT]: (coords) => {
+            return {
+                x: coords.x + 1,
+                y: coords.y,
+            }
+        },
+    }
+
+    const reducer = catsPositionRedusers[playerDirection]
+    const newCoords = reducer(_state.positions["cat" + playerNumber])
+
+    if(!_isInsideGrid(newCoords)){
+        return
+    }
+
+    _state.positions['cat' + playerNumber] = newCoords
+
+    const _isCatCatchMouse = (playerNumber) => {
+        const playerPosition = newCoords
+        const mousePosition = getMousePosition()
+
+        return playerPosition.x === mousePosition.x && playerPosition.y === mousePosition.y
+    }
+
+    const _catchMouse = (playerNumber) => {
+        _state.points['cat' + playerNumber]++
+        console.log(_state.points['cat' + playerNumber])
+        if(_state.points['cat' + playerNumber] === _state.settings.pointsToWin) {
+            _state.status = GAME_STATUSES.WIN
+            console.log("you win")
+            clearInterval(jumpInterval)
+        }
+        _teleportMouse()
+    }
+
+    if(_isCatCatchMouse(playerNumber)) {
+        _catchMouse(playerNumber)
+    }
+
+    _observer();
+}
+
+const _isInsideGrid = (coords) => {
+    const isInsideGrid = coords.x >= 0 && coords.x < _state.settings.gridSize.columnCount 
+    && coords.y >= 0 && coords.y < _state.settings.gridSize.rowCount 
+
+    return isInsideGrid
 }
 
 let _mouseEscape = () => {

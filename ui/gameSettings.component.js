@@ -6,6 +6,12 @@ import { settingsMode } from "./Settings.component.js";
 export const Game = (status) => {
     let element = document.createElement('div')
 
+    Game.render(element, status)
+
+    return element;
+}
+
+Game.render = (element, status) => {
     switch (status) {
         case GAME_STATUSES.SETTINGS:
             const settingsModeElement = settingsMode()
@@ -31,6 +37,4 @@ export const Game = (status) => {
             element.append(status)
             break;
     }
-
-    return element;
 }

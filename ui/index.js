@@ -1,8 +1,5 @@
-import { settingsMode } from "./Settings.component.js";
-import { getStatus, subsriber } from "../state/data.js"
-import { GAME_STATUSES } from "../state/GAME_STATUSES.js";
-import { gameMode } from "./game-settings/Game.component.js";
-import { loseMode } from "./Lose.component.js";
+import { CATS_DIRECTIONS } from "../state/CATS_DIRECTIONS.js";
+import { catsMove, getStatus, subsriber } from "../state/data.js"
 import { Game } from "./gameSettings.component.js";
 
 const rootElement = document.getElementById('root')
@@ -17,6 +14,19 @@ const render = () => {
     rootElement.append(gameElement)
 
 }
+
+window.addEventListener('keyup', (event) => {
+    switch(event.code){
+        case'ArrowUp': catsMove(1, CATS_DIRECTIONS.UP)
+        break
+        case'ArrowDown': catsMove(1, CATS_DIRECTIONS.DOWN)
+        break
+        case'ArrowLeft': catsMove(1, CATS_DIRECTIONS.LEFT)
+        break
+        case'ArrowRight': catsMove(1, CATS_DIRECTIONS.RIGHT)
+        break
+    }
+})
 
 render()
 

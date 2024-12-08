@@ -3,6 +3,12 @@ import { getCat1Position, getGridSize, getMousePosition } from "../../state/data
 export let Grid = () => {
     const element = document.createElement('table')
 
+    Grid.render(element)
+
+    return element
+}
+
+Grid.render = (element) => {
     const gridSize = getGridSize()
 
     const mousePosition = getMousePosition()
@@ -27,6 +33,4 @@ export let Grid = () => {
         }
         element.append(row)
     }
-
-    return element
 }
