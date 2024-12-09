@@ -5,9 +5,10 @@ export const gameMode = () => {
 
     gameMode.render(element)
 
-    return element
+    return {element}
 }
 
 gameMode.render = (element) => {
-    element.append(Grid())
+    const gridComponentInstance = Grid()
+    element.append(gridComponentInstance.element)
 }

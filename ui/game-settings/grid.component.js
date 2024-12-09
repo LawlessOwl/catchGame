@@ -1,14 +1,19 @@
-import { getCat1Position, getGridSize, getMousePosition } from "../../state/data.js"
+import { getCat1Position, getGridSize, getMousePosition, subsriber } from "../../state/data.js"
 
 export let Grid = () => {
     const element = document.createElement('table')
 
+    subsriber(() => {
+        Grid.render(element)
+    })
+
     Grid.render(element)
 
-    return element
+    return {element}
 }
 
 Grid.render = (element) => {
+    element.innerHTML = ""
     const gridSize = getGridSize()
 
     const mousePosition = getMousePosition()

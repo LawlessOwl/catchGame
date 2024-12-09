@@ -24,10 +24,14 @@ const _state = {
 }
 
 
-let _observer = null
+let _observers = []
+
+let _notify = () => {
+    _observers.forEach(o => o())
+}
 
 export const subsriber = (callback) => {
-    _observer = callback
+    _observers.push(callback)
 }
 
 export const getStatus = () => {
@@ -50,7 +54,7 @@ export const gameStart = () => {
     _state.status = GAME_STATUSES.PROGRESS
     _teleportMouse()
     jumpInterval = setInterval(_mouseEscape, 4000)
-    _observer()
+    _notify()
 }
 
 let jumpInterval
@@ -116,7 +120,7 @@ export let catsMove = (playerNumber, playerDirection) => {
         _catchMouse(playerNumber)
     }
 
-    _observer();
+    _notify();
 }
 
 const _isInsideGrid = (coords) => {
@@ -141,7 +145,7 @@ let _teleportMouse = () => {
     }
     _state.positions.mouse.x = newXPosition
     _state.positions.mouse.y = newYPosition
-    _observer()
+    _notify()
 }
 
 let _getRandomInt = (max) => {

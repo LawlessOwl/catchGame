@@ -1,36 +1,47 @@
+import { getStatus, subsriber } from "../state/data.js";
 import { GAME_STATUSES } from "../state/GAME_STATUSES.js";
 import { gameMode } from "./game-settings/Game.component.js";
 import { loseMode } from "./Lose.component.js";
 import { settingsMode } from "./Settings.component.js";
 
-export const Game = (status) => {
+export const Game = () => {
     let element = document.createElement('div')
 
-    Game.render(element, status)
+    let localState = { status: null }
+    
+    subsriber(() => {
+        Game.render(element, localState)
+    })
 
-    return element;
+    Game.render(element, localState)
+
+    return {element};
 }
 
-Game.render = (element, status) => {
+Game.render = (element, localState) => {
+    const status = getStatus()
+    if (localState.status === status) return
+    localState.status = status
+    element.innerHTML = ''
     switch (status) {
         case GAME_STATUSES.SETTINGS:
-            const settingsModeElement = settingsMode()
-            element.append(settingsModeElement)
+            const settingsModeInstance = settingsMode()
+            element.append(settingsModeInstance.element)
             break;
         
         case GAME_STATUSES.PROGRESS:
-            const progressModeElement = gameMode()
-            element.append(progressModeElement)
+            const progressModeInstance = gameMode()
+            element.append(progressModeInstance.element)
             break;
     
         case GAME_STATUSES.LOSE:
-            const loseModeElement = loseMode()
-            element.append(loseModeElement)
+            const loseModeInstance = loseMode()
+            element.append(loseModeInstance.element)
             break;
     
         case GAME_STATUSES.WIN:
-            const winModeElement = alert("win")
-            element.append(winModeElement)
+            const winModeInstance = alert("win")
+            element.append(winModeInstance.element)
             break;
     
         default:

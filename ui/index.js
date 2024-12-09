@@ -1,17 +1,14 @@
 import { CATS_DIRECTIONS } from "../state/CATS_DIRECTIONS.js";
-import { catsMove, getStatus, subsriber } from "../state/data.js"
+import { catsMove} from "../state/data.js"
 import { Game } from "./gameSettings.component.js";
 
 const rootElement = document.getElementById('root')
 
 const render = () => {
-    rootElement.innerHTML = "";
-    
-    const status = getStatus()
 
-    const gameElement = Game(status)
+    const gameInstance = Game()
 
-    rootElement.append(gameElement)
+    rootElement.append(gameInstance.element)
 
 }
 
@@ -29,5 +26,3 @@ window.addEventListener('keyup', (event) => {
 })
 
 render()
-
-subsriber(render)

@@ -4,8 +4,8 @@ export const settingsMode = () => {
     const element = document.createElement('div')
 
     settingsMode.render(element)
-
-    return element
+    
+    return {element}
 }
 
 settingsMode.render = (element) => {
