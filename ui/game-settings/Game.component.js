@@ -3,12 +3,19 @@ import { Grid } from "./grid.component.js"
 export const gameMode = () => {
     const element = document.createElement('div')
 
-    gameMode.render(element)
+    const localState = {
+        childrenCleanups: []
+    }
 
-    return {element}
+    gameMode.render(element, localState)
+
+    return {element, cleanup: () => {
+
+    }}
 }
 
-gameMode.render = (element) => {
+gameMode.render = (element, localState) => {
     const gridComponentInstance = Grid()
+    localState.childrenCleanups.push(gridComponentInstance.cleanup)
     element.append(gridComponentInstance.element)
 }

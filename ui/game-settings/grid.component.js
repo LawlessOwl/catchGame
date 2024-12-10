@@ -1,15 +1,15 @@
-import { getCat1Position, getGridSize, getMousePosition, subsriber } from "../../state/data.js"
+import { getCat1Position, getGridSize, getMousePosition, subscriber } from "../../state/data.js"
 
 export let Grid = () => {
     const element = document.createElement('table')
 
-    subsriber(() => {
+    const unsubscriber = subscriber(() => {
         Grid.render(element)
     })
 
     Grid.render(element)
 
-    return {element}
+    return {element, cleanup: () => { unsubscriber() }}
 }
 
 Grid.render = (element) => {

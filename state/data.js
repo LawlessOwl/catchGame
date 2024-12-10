@@ -30,8 +30,16 @@ let _notify = () => {
     _observers.forEach(o => o())
 }
 
-export const subsriber = (callback) => {
+export const subscriber = (callback) => {
     _observers.push(callback)
+
+    return () => {
+        unsubscriber(callback)
+    }
+}
+
+export const unsubscriber = (callback) => {
+    _observers = _observers.filter(o = o !== callback)
 }
 
 export const getStatus = () => {

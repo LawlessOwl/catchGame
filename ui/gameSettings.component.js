@@ -1,4 +1,4 @@
-import { getStatus, subsriber } from "../state/data.js";
+import { getStatus, subscriber } from "../state/data.js";
 import { GAME_STATUSES } from "../state/GAME_STATUSES.js";
 import { gameMode } from "./game-settings/Game.component.js";
 import { loseMode } from "./Lose.component.js";
@@ -9,7 +9,7 @@ export const Game = () => {
 
     let localState = { status: null }
     
-    subsriber(() => {
+    subscriber(() => {
         Game.render(element, localState)
     })
 
