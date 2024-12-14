@@ -3,7 +3,7 @@ export const loseMode = () => {
 
     loseMode.render(element)
 
-    return {element}
+    return {element, cleanup: () => {}}
 }
 
 loseMode.render = (element) => {

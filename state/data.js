@@ -26,7 +26,8 @@ const _state = {
 
 let _observers = []
 
-let _notify = () => {
+let _notify = (type, payload = {}) => {
+    
     _observers.forEach(o => o())
 }
 

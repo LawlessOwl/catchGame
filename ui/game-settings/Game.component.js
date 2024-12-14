@@ -10,7 +10,7 @@ export const gameMode = () => {
     gameMode.render(element, localState)
 
     return {element, cleanup: () => {
-
+        localState.childrenCleanups.forEach(cc => cc())
     }}
 }
 

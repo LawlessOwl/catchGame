@@ -1,39 +1,33 @@
-import { getCat1Position, getGridSize, getMousePosition, subscriber } from "../../state/data.js"
+import { getGridSize } from "../../state/data.js"
+import { Cell } from "./cell.component.js"
 
 export let Grid = () => {
     const element = document.createElement('table')
 
-    const unsubscriber = subscriber(() => {
-        Grid.render(element)
-    })
+    const localState = {
+        childrenCleanups: []
+    }
 
-    Grid.render(element)
+    Grid.render(element, localState)
 
-    return {element, cleanup: () => { unsubscriber() }}
+    return {element, cleanup: () => {
+        localState.childrenCleanups.forEach(cc => cc())
+    }}
 }
 
-Grid.render = (element) => {
+Grid.render = (element, localState) => {
     element.innerHTML = ""
+    localState.childrenCleanups.forEach(cc => cc())
+    localState.childrenCleanups
     const gridSize = getGridSize()
-
-    const mousePosition = getMousePosition()
-
-    const cat1Position = getCat1Position()
 
     for (let y = 0; y < gridSize.rowCount; y++) {
         const row = document.createElement("tr")
 
         for (let x = 0; x < gridSize.columnCount; x++) {
-            const cell = document.createElement('td')
-            if (x === mousePosition.x && y === mousePosition.y) {
-                cell.append("M")
-            }
-
-            if (x === cat1Position.x && y === cat1Position.y) {
-                cell.append("C1")
-            }
-            
-            row.append(cell)
+            const cellInstance = Cell(x,y)
+            localState.childrenCleanups.push(cellInstance.cleanup)
+            row.append(cellInstance.element)
             
         }
         element.append(row)

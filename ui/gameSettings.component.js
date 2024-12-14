@@ -7,15 +7,18 @@ import { settingsMode } from "./Settings.component.js";
 export const Game = () => {
     let element = document.createElement('div')
 
-    let localState = { status: null }
+    let localState = { status: null, childrenCleanups: [] }
     
-    subscriber(() => {
+    const unsubscriber = subscriber(() => {
         Game.render(element, localState)
     })
 
     Game.render(element, localState)
 
-    return {element};
+    return {element, cleanup: () => {
+        unsubscriber();
+        localState.childrenCleanups.forEach(cc => cc())
+    }};
 }
 
 Game.render = (element, localState) => {

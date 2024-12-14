@@ -5,7 +5,7 @@ export const settingsMode = () => {
 
     settingsMode.render(element)
     
-    return {element}
+    return {element, cleanup: () => {}}
 }
 
 settingsMode.render = (element) => {
