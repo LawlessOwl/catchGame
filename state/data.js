@@ -1,4 +1,5 @@
 import { CATS_DIRECTIONS } from "./CATS_DIRECTIONS.js"
+import { EVENTS } from "./EVENT.js"
 import { GAME_STATUSES } from "./GAME_STATUSES.js"
 
 const _state = {
@@ -8,7 +9,7 @@ const _state = {
             rowCount: 4,
             columnCount: 4,
         },
-        pointsToWin: 30,
+        pointsToWin: 3,
         pointsToLose: 3,
     },
     positions: {
@@ -27,8 +28,11 @@ const _state = {
 let _observers = []
 
 let _notify = (type, payload = {}) => {
-    
-    _observers.forEach(o => o())
+    const event = {
+        type,
+        payload
+    }
+    _observers.forEach(o => o(event))
 }
 
 export const subscriber = (callback) => {
@@ -63,7 +67,7 @@ export const gameStart = () => {
     _state.status = GAME_STATUSES.PROGRESS
     _teleportMouse()
     jumpInterval = setInterval(_mouseEscape, 4000)
-    _notify()
+    _notify(EVENTS.STATUS_CHANGED)
 }
 
 let jumpInterval
@@ -99,6 +103,7 @@ export let catsMove = (playerNumber, playerDirection) => {
     }
 
     const reducer = catsPositionRedusers[playerDirection]
+    const prewCoords = {..._state.positions["cat" + playerNumber]}
     const newCoords = reducer(_state.positions["cat" + playerNumber])
 
     if(!_isInsideGrid(newCoords)){
@@ -119,6 +124,7 @@ export let catsMove = (playerNumber, playerDirection) => {
         console.log(_state.points['cat' + playerNumber])
         if(_state.points['cat' + playerNumber] === _state.settings.pointsToWin) {
             _state.status = GAME_STATUSES.WIN
+            _notify(EVENTS.STATUS_CHANGED)
             console.log("you win")
             clearInterval(jumpInterval)
         }
@@ -129,7 +135,11 @@ export let catsMove = (playerNumber, playerDirection) => {
         _catchMouse(playerNumber)
     }
 
-    _notify();
+    _notify(EVENTS.PLAYER_JUMPED, {
+        newPosition: {...newCoords},
+        prewCoords: prewCoords,
+        playerNumber: playerNumber
+    });
 }
 
 const _isInsideGrid = (coords) => {
@@ -140,6 +150,7 @@ const _isInsideGrid = (coords) => {
 }
 
 let _mouseEscape = () => {
+    _notify(EVENTS.MOUSE_ESCAPED)
     _teleportMouse()
 }
 
@@ -147,14 +158,18 @@ let _teleportMouse = () => {
     const newXPosition =  _getRandomInt(getGridSize().columnCount)
     const newYPosition = _getRandomInt(getGridSize().rowCount)
 
-    if ((newXPosition === getMousePosition.x && newYPosition === getMousePosition.y)
-        || (newXPosition === getCat1Position.x && newYPosition === getCat1Position.y)){
+    if ((newXPosition === getMousePosition().x && newYPosition === getMousePosition().y)
+        || (newXPosition === getCat1Position().x && newYPosition === getCat1Position().y)){
         _teleportMouse();
         return;
     }
     _state.positions.mouse.x = newXPosition
     _state.positions.mouse.y = newYPosition
-    _notify()
+    const prewPosition = {..._state.positions.mouse}
+    _notify(EVENTS.MOUSE_JUMPED, {
+        newPosition: {..._state.positions.mouse},
+        prewPosition: prewPosition
+    })
 }
 
 let _getRandomInt = (max) => {
