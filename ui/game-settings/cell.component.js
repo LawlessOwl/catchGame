@@ -7,7 +7,10 @@ export let Cell = (x, y) => {
     
     const unsubsribe = subscriber((event) => {
         if (event.type === EVENTS.MOUSE_JUMPED || event.type === EVENTS.PLAYER_JUMPED) {
-            Cell.render(element, x, y)
+            if ((event.payload.newPosition.x === x && event.payload.newPosition.y === y) 
+            || (event.payload.prewCoords.x === x && event.payload.prewCoords.y === y)) {
+                Cell.render(element, x, y)
+            }
         }
     })
 
