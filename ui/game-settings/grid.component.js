@@ -18,18 +18,19 @@ export let Grid = () => {
 Grid.render = (element, localState) => {
     element.innerHTML = ""
     localState.childrenCleanups.forEach(cc => cc())
-    localState.childrenCleanups
+    localState.childrenCleanups = [];
     const gridSize = getGridSize()
 
     for (let y = 0; y < gridSize.rowCount; y++) {
         const row = document.createElement("tr")
 
         for (let x = 0; x < gridSize.columnCount; x++) {
-            const cellInstance = Cell(x,y)
+            const cellInstance = Cell(x, y)
             localState.childrenCleanups.push(cellInstance.cleanup)
             row.append(cellInstance.element)
             
         }
         element.append(row)
     }
+    window.grid = element
 }

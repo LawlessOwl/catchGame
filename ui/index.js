@@ -4,13 +4,10 @@ import { Game } from "./gameSettings.component.js";
 
 const rootElement = document.getElementById('root')
 
-const render = () => {
 
-    const gameInstance = Game()
+const gameInstance = Game()
 
-    rootElement.append(gameInstance.element)
-
-}
+rootElement.append(gameInstance.element)
 
 window.addEventListener('keyup', (event) => {
     switch(event.code){
@@ -24,5 +21,3 @@ window.addEventListener('keyup', (event) => {
         break
     }
 })
-
-render()
