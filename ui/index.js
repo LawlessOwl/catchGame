@@ -2,6 +2,14 @@ import { CATS_DIRECTIONS } from "../state/CATS_DIRECTIONS.js";
 import { catsMove} from "../state/data.js"
 import { Game } from "./gameSettings.component.js";
 
+
+const channel = new WebSocket('ws://localhost:3000')
+
+channel.addEventListener('message', (event) => {
+    console.log('New message:', event.data)
+    channel.send('answer from client')
+})
+
 const rootElement = document.getElementById('root')
 
 
