@@ -1,6 +1,6 @@
-import { CATS_DIRECTIONS } from "./CATS_DIRECTIONS.js"
-import { EVENTS } from "./EVENT.js"
-import { GAME_STATUSES } from "./GAME_STATUSES.js"
+import { CATS_DIRECTIONS } from "../state/CATS_DIRECTIONS.js"
+import { EVENTS } from "../state/EVENT.js"
+import { GAME_STATUSES } from "../state/GAME_STATUSES.js"
 
 const _state = {
     status: GAME_STATUSES.SETTINGS,
@@ -38,8 +38,6 @@ let _notify = (type, payload = {}) => {
 export const subscriber = (callback) => {
     _observers.push(callback)
 
-    window._observers = _observers;
-
     return () => {
         unsubscriber(callback)
     }
@@ -47,7 +45,6 @@ export const subscriber = (callback) => {
 
 export const unsubscriber = (callback) => {
     _observers = _observers.filter(o = o !== callback)
-    window._observers = _observers;
 }
 
 export const getStatus = () => {

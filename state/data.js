@@ -1,7 +1,23 @@
-import { CATS_DIRECTIONS } from "./CATS_DIRECTIONS.js"
-import { EVENTS } from "./EVENT.js"
 import { GAME_STATUSES } from "./GAME_STATUSES.js"
 
+const channel = new WebSocket('ws://localhost:3000')
+
+let proxyState = null;
+let inited = false;
+
+channel.addEventListener('message', (event) => {
+    const notification = JSON.parse(event.data)
+    if (notification.type === "ACTUAL-STATE") {
+        proxyState = notification.payload
+        if (!inited) {
+            inited = true;
+            _notify()
+        }
+    } else {
+        _notify(notification.type, notification.payload)
+    }
+    console.log('New message:', event.data)
+})
 
 let _observers = []
 
@@ -16,36 +32,36 @@ let _notify = (type, payload = {}) => {
 export const subscriber = (callback) => {
     _observers.push(callback)
 
-    window._observers = _observers;
-
     return () => {
         unsubscriber(callback)
     }
 }
 
 export const unsubscriber = (callback) => {
-    _observers = _observers.filter(o = o !== callback)
-    window._observers = _observers;
+    _observers = _observers.filter(o => o !== callback)
 }
 
 export const getStatus = () => {
-
+    return proxyState.status
 }
 
 export const getGridSize = () => {
-
+    return proxyState.gridSize
 }
 
 export const getMousePosition = () => {
-
+    return proxyState.mousePosition
 }
 
 export const getCat1Position = () => {
-
+    return proxyState.cat1Position
 }
 
 export const gameStart = () => {
-
+    const action = {
+        command: "START-GAME",
+    }
+    channel.send(JSON.stringify(action))
 }
 
 
