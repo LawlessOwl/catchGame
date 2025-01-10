@@ -64,14 +64,15 @@ export const gameStart = () => {
     channel.send(JSON.stringify(action))
 }
 
-
-
-
 export let catsMove = (playerNumber, playerDirection) => {
-
-    
-
-   
+    const action = {
+        command: "MOVE-PLAYER",
+        payload: {
+            playerNumber: playerNumber,
+            playerDirection: playerDirection
+        }
+    }
+    channel.send(JSON.stringify(action))
 }
 
 const _isCatCatchMouse = (playerNumber) => {

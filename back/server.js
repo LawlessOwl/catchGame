@@ -1,6 +1,11 @@
 import { WebSocketServer } from 'ws';
-import { getStatus, gameStart, getCat1Position, getGridSize, getMousePosition, subscriber } from './data.js';
+import { getStatus, gameStart, getCat1Position, getGridSize, getMousePosition, subscriber, catsMove } from './data.js';
 import { CATS_DIRECTIONS } from '../state/CATS_DIRECTIONS.js';
+
+const clientMessage = {
+    command:"MOVE-PLAYER",
+    payload: {playerNumber: 1, moveDirection: CATS_DIRECTIONS.LEFT}
+}
 
 let sendActualState = (channel) => {
     const notification = {
@@ -34,6 +39,10 @@ server.on('connection', (channel) => {
         switch (action.command) {
             case "START-GAME": {
                 gameStart()
+                break
+            }
+            case "MOVE-PLAYER": {
+                catsMove(action.payload.playerNumber, action.payload.playerDirection)
             }
         }
     })
